@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Mark AI Pro - Deep Voice Edition</title>
+    <title>VoiceCraft Studio - Deep Male Vault Edition</title>
     <!-- Thư viện lamejs chuẩn qua CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-hover: #4f46e5;
-            --danger-color: #ef4444;
-            --success-color: #10b981;
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
+            --primary: #f59e0b;
+            --primary-hover: #d97706;
+            --danger: #ef4444;
+            --success: #10b981;
+            --bg: #07090e;
+            --card: #101522;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+            --border: #1e2638;
         }
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -32,139 +32,166 @@
         }
 
         .container {
-            background: var(--card-bg);
+            background: var(--card);
             padding: 35px;
-            border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             width: 100%;
-            max-width: 650px;
-            border: 1px solid var(--border-color);
+            max-width: 720px;
+            border: 1px solid var(--border);
         }
 
         h2 {
-            color: var(--text-color);
+            color: var(--text);
             text-align: center;
             margin-top: 0;
             margin-bottom: 25px;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--text-muted);
-            font-size: 13px;
+            color: var(--muted);
+            font-size: 12px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         textarea {
             width: 100%;
             height: 140px;
-            padding: 14px;
-            background-color: #0f172a;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+            padding: 15px;
+            background-color: #07090e;
+            border: 2px solid var(--border);
+            border-radius: 14px;
             resize: vertical;
             font-size: 15px;
             box-sizing: border-box;
             margin-bottom: 20px;
-            color: var(--text-color);
+            color: var(--text);
             font-family: inherit;
         }
 
         textarea:focus, select:focus {
             outline: none;
-            border-color: var(--primary-color);
+            border-color: var(--primary);
+        }
+
+        .filter-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .filter-btn {
+            background: #1e2638;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #07090e;
+            border-color: var(--primary);
         }
 
         select {
             width: 100%;
-            padding: 12px 14px;
-            margin-bottom: 20px;
-            background-color: #0f172a;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+            padding: 14px;
+            background-color: #07090e;
+            border: 2px solid var(--border);
+            border-radius: 14px;
             font-size: 15px;
             box-sizing: border-box;
-            color: var(--text-color);
+            color: var(--text);
             cursor: pointer;
+            margin-bottom: 20px;
         }
 
-        .sliders-grid {
+        .controls-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 25px;
-            background: rgba(15, 23, 42, 0.5);
+            background: rgba(7, 9, 14, 0.6);
             padding: 20px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            border: 1px solid var(--border);
         }
 
-        .slider-group {
+        .control-group {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
-        .slider-header {
+        .control-header {
             display: flex;
             justify-content: space-between;
             font-size: 13px;
-            color: var(--text-muted);
+            color: var(--muted);
         }
 
-        .slider-header span:last-child {
-            font-weight: 600;
-            color: var(--primary-color);
+        .control-header span:last-child {
+            font-weight: 700;
+            color: var(--primary);
         }
 
         input[type="range"] {
             width: 100%;
-            accent-color: var(--primary-color);
+            accent-color: var(--primary);
             cursor: pointer;
         }
 
-        .progress-container {
+        .progress-box {
             width: 100%;
-            background-color: #0f172a;
+            background-color: #07090e;
             border-radius: 8px;
             height: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             display: none;
         }
 
         .progress-bar {
             width: 0%;
             height: 100%;
-            background-color: var(--primary-color);
+            background-color: var(--primary);
             transition: width 0.2s ease;
         }
 
-        .btn-group {
+        .actions {
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 20px;
         }
 
-        .main-btns {
+        .main-row {
             display: flex;
             gap: 12px;
         }
 
-        button {
+        button.action-btn {
             flex: 1;
-            padding: 14px;
+            padding: 15px;
             border: none;
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 14px;
+            font-size: 16px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             color: white;
             transition: all 0.2s ease;
             display: flex;
@@ -173,20 +200,20 @@
             gap: 8px;
         }
 
-        #speak-btn { background-color: var(--primary-color); }
-        #speak-btn:hover { background-color: var(--primary-hover); }
+        #generate-btn { background-color: var(--primary); color: #07090e; }
+        #generate-btn:hover { background-color: var(--primary-hover); }
 
-        #stop-btn { background-color: var(--danger-color); display: none; }
+        #stop-btn { background-color: var(--danger); display: none; }
         #stop-btn:hover { background-color: #dc2626; }
 
-        #download-mp3-btn { background-color: var(--success-color); }
-        #download-mp3-btn:hover { background-color: #059669; }
+        #download-btn { background-color: var(--success); }
+        #download-btn:hover { background-color: #059669; }
 
-        .preview-section {
-            background: rgba(15, 23, 42, 0.5);
+        .preview-box {
+            background: rgba(7, 9, 14, 0.6);
             padding: 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            border: 1px solid var(--border);
             margin-bottom: 15px;
         }
 
@@ -196,9 +223,9 @@
             display: block;
         }
 
-        .note {
+        .status {
             font-size: 13px;
-            color: var(--text-muted);
+            color: var(--muted);
             text-align: center;
             font-weight: 500;
         }
@@ -207,53 +234,60 @@
 <body>
 
 <div class="container">
-    <h2>🎙️ Voice Mark AI Pro (Đa Giọng + Trầm Ấm)</h2>
+    <h2>🎙️ VoiceCraft Studio (Deep Male Vault)</h2>
     
-    <label for="text-input">Nội dung tiếng Anh:</label>
-    <textarea id="text-input" placeholder="Nhập câu chuyện hoặc văn bản của bạn vào đây..."></textarea>
+    <label for="text-input">Nội dung văn bản cần chuyển đổi:</label>
+    <textarea id="text-input" placeholder="Nhập câu chuyện, kịch bản hoặc văn bản cần đọc bằng giọng nam trầm..."></textarea>
     
-    <label for="voice-select">Chọn giọng đọc tiếng Anh:</label>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <label style="margin:0;">Kho Tàng Giọng Đọc</label>
+        <div class="filter-box" style="margin:0;">
+            <button type="button" class="filter-btn active" id="filter-all" onclick="setFilter('all')">Tất cả</button>
+            <button type="button" class="filter-btn" id="filter-male" onclick="setFilter('male')">Chỉ Giọng Nam 🎙️</button>
+        </div>
+    </div>
+
     <select id="voice-select">
         <option value="">Đang tải danh sách giọng...</option>
     </select>
 
-    <div class="sliders-grid">
-        <div class="slider-group">
-            <div class="slider-header">
-                <label style="margin:0; font-size:12px;">Độ trầm ấm (Pitch - Kéo nhỏ để giọng trầm dày)</label>
-                <span id="pitch-val">0.75x</span>
+    <div class="controls-grid">
+        <div class="control-group">
+            <div class="control-header">
+                <label style="margin:0; font-size:11px;">Độ Trầm Ấm / Cao Độ (Pitch)</label>
+                <span id="pitch-val">0.65x</span>
             </div>
-            <input type="range" id="pitch-slider" min="0.5" max="1.2" step="0.05" value="0.75">
+            <!-- Mặc định kéo xuống 0.65 để tạo độ trầm ấm dày đặc tối đa cho giọng nam -->
+            <input type="range" id="pitch-slider" min="0.3" max="1.0" step="0.05" value="0.65">
         </div>
 
-        <div class="slider-group">
-            <div class="slider-header">
-                <label style="margin:0; font-size:12px;">Tốc độ đọc (Speed - Kéo chậm lại để kể chuyện)</label>
+        <div class="control-group">
+            <div class="control-header">
+                <label style="margin:0; font-size:11px;">Tốc độ đọc (Speed)</label>
                 <span id="rate-val">0.85x</span>
             </div>
-            <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.05" value="0.85">
+            <input type="range" id="rate-slider" min="0.5" max="1.3" step="0.05" value="0.85">
         </div>
     </div>
 
-    <!-- Thanh tiến trình -->
-    <div class="progress-container" id="progress-container">
+    <div class="progress-box" id="progress-container">
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
-    <div class="btn-group">
-        <div class="main-btns">
-            <button id="speak-btn">🎙️ Bắt đầu Đọc & Ghi</button>
-            <button id="stop-btn">⏹️ Dừng Lại</button>
+    <div class="actions">
+        <div class="main-row">
+            <button class="action-btn" id="generate-btn">🎙️ Bắt Đầu Đọc & Ghi Âm</button>
+            <button class="action-btn" id="stop-btn">⏹️ Dừng Lại</button>
         </div>
-        <button id="download-mp3-btn">📥 Tải Xuống File MP3 (CapCut)</button>
+        <button class="action-btn" id="download-btn">📥 Tải Xuống File MP3 Chất Lượng Cao</button>
     </div>
     
-    <div class="preview-section">
-        <label style="margin-bottom: 6px; font-size: 11px;">Nghe lại trước khi tải:</label>
+    <div class="preview-box">
+        <label style="margin-bottom: 6px; font-size: 10px;">Nghe trước kết quả:</label>
         <audio id="audio-preview" controls></audio>
     </div>
 
-    <div class="note" id="status-note">Hệ thống sẵn sàng tạo âm thanh.</div>
+    <div class="status" id="status-text">Hệ thống sẵn sàng với bộ lọc chuyên sâu giọng nam trầm.</div>
 </div>
 
 <script>
@@ -264,73 +298,119 @@
     const rateSlider = document.getElementById('rate-slider');
     const rateVal = document.getElementById('rate-val');
 
-    const speakBtn = document.getElementById('speak-btn');
+    const generateBtn = document.getElementById('generate-btn');
     const stopBtn = document.getElementById('stop-btn');
-    const downloadMp3Btn = document.getElementById('download-mp3-btn');
+    const downloadBtn = document.getElementById('download-btn');
     const audioPreview = document.getElementById('audio-preview');
-    const statusNote = document.getElementById('status-note');
+    const statusText = document.getElementById('status-text');
     const progressContainer = document.getElementById('progress-container');
     const progressBar = document.getElementById('progress-bar');
+    
+    const filterAllBtn = document.getElementById('filter-all');
+    const filterMaleBtn = document.getElementById('filter-male');
 
-    let voices = [];
+    let systemVoices = [];
+    let currentFilter = 'all';
     let mediaRecorder;
-    let recordedChunks = [];
-    let audioBlobForMp3 = null;
-    let progressInterval = null;
+    let audioChunks = [];
+    let finalMp3Blob = null;
+    let timerInterval = null;
 
     pitchSlider.oninput = () => pitchVal.textContent = parseFloat(pitchSlider.value).toFixed(2) + 'x';
     rateSlider.oninput = () => rateVal.textContent = parseFloat(rateSlider.value).toFixed(2) + 'x';
 
-    function loadVoices() {
+    function setFilter(type) {
+        currentFilter = type;
+        if (type === 'all') {
+            filterAllBtn.classList.add('active');
+            filterMaleBtn.classList.remove('active');
+        } else {
+            filterMaleBtn.classList.add('active');
+            filterAllBtn.classList.remove('active');
+        }
+        populateVoices();
+    }
+
+    function populateVoices() {
         if (!('speechSynthesis' in window)) return;
-        voices = window.speechSynthesis.getVoices();
-        if (voices.length === 0) return;
+        systemVoices = window.speechSynthesis.getVoices();
+        if (systemVoices.length === 0) return;
 
         voiceSelect.innerHTML = '';
-        const englishVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith('en'));
 
-        if (englishVoices.length === 0) {
-            voiceSelect.innerHTML = '<option value="">Không tìm thấy giọng tiếng Anh trên thiết bị này</option>';
+        // Từ khóa nhận diện giọng nam phổ biến trên các hệ điều hành (Windows, macOS, Android, iOS, ChromeOS)
+        const maleKeywords = [
+            'david', 'mark', 'guy', 'james', 'george', 'ryan', 'oliver', 'harry', 
+            'nathan', 'stefan', 'brian', 'eric', 'thomas', 'daniel', 'richard', 
+            'microsoft zira', 'natural', 'online', 'male', 'nam', 'chiến', 'hùng'
+        ];
+
+        // Từ khóa nhận diện giọng nữ để loại trừ khi bấm nút "Chỉ Giọng Nam"
+        const femaleKeywords = ['zira', 'aria', 'jenny', 'sara', 'helena', 'monica', 'catherine', 'hazel', 'susan', 'linda', 'fema', 'nữ'];
+
+        let filtered = systemVoices.map((voice, index) => ({ voice, index })).filter(item => {
+            const name = item.voice.name.toLowerCase();
+            const lang = item.voice.lang.toLowerCase();
+            
+            if (currentFilter === 'male') {
+                let isFemale = femaleKeywords.some(kw => name.includes(kw));
+                let isMaleExplicit = maleKeywords.some(kw => name.includes(kw));
+                // Nếu tên chứa từ khóa nữ rõ ràng -> loại
+                if (isFemale && !isMaleExplicit) return false;
+                // Ưu tiên các giọng có từ khóa nam hoặc các giọng Anh/Mỹ/Việt chung chưa bị gán nhãn nữ
+                return isMaleExplicit || lang.includes('en') || lang.includes('vi');
+            }
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            voiceSelect.innerHTML = '<option value="">Không tìm thấy giọng phù hợp bộ lọc</option>';
             return;
         }
 
-        englishVoices.forEach((voice) => {
-            const originalIndex = voices.indexOf(voice);
+        filtered.forEach(item => {
+            const voice = item.voice;
+            const originalIndex = item.index;
             const option = document.createElement('option');
             option.value = originalIndex;
             
             let label = `${voice.name} (${voice.lang})`;
-            if (voice.name.includes('David') || voice.name.includes('Mark') || voice.name.includes('Guy') || voice.name.includes('James')) {
-                label += ' 🎙️ (Giọng nam trầm)';
-                option.selected = true;
-            } else if (voice.name.toLowerCase().includes('natural') || voice.name.toLowerCase().includes('online')) {
-                label += ' ⭐ (Chất lượng cao)';
+            const lowerName = voice.name.toLowerCase();
+
+            if (maleKeywords.some(kw => lowerName.includes(kw))) {
+                label += ' 🎙️ [Nam Trầm Ấm / Kể Chuyện]';
+                if (!option.selected && (lowerName.includes('david') || lowerName.includes('mark') || lowerName.includes('guy'))) {
+                    option.selected = true;
+                }
+            } else if (lowerName.includes('natural') || lowerName.includes('online')) {
+                label += ' ⭐ [Chất Lượng Cao]';
             }
+
             option.textContent = label;
             voiceSelect.appendChild(option);
         });
     }
 
-    loadVoices();
+    populateVoices();
     if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = loadVoices;
+        speechSynthesis.onvoiceschanged = populateVoices;
     }
-    setTimeout(loadVoices, 500);
+    setTimeout(populateVoices, 500);
 
-    function resetState() {
+    function abortProcess() {
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-        if (progressInterval) clearInterval(progressInterval);
+        if (timerInterval) clearInterval(timerInterval);
         progressContainer.style.display = 'none';
         progressBar.style.width = '0%';
-        speakBtn.disabled = false;
+        generateBtn.disabled = false;
         stopBtn.style.display = 'none';
-        statusNote.textContent = "Đã dừng thao tác.";
+        statusText.textContent = "Đã dừng tiến trình.";
     }
 
-    stopBtn.addEventListener('click', resetState);
+    stopBtn.addEventListener('click', abortProcess);
 
-    speakBtn.addEventListener('click', async () => {
+    generateBtn.addEventListener('click', async () => {
         const text = textInput.value.trim();
         if (!text) {
             alert('Vui lòng nhập nội dung văn bản!');
@@ -338,16 +418,16 @@
         }
 
         if (!('speechSynthesis' in window)) {
-            alert('Trình duyệt của bạn không hỗ trợ đọc văn bản!');
+            alert('Trình duyệt không hỗ trợ đọc văn bản!');
             return;
         }
 
-        statusNote.textContent = "Đang khởi tạo tiến trình đọc...";
-        speakBtn.disabled = true;
+        statusText.textContent = "Đang cấu hình giọng đọc nam trầm ấm...";
+        generateBtn.disabled = true;
         stopBtn.style.display = 'flex';
         progressContainer.style.display = 'block';
         progressBar.style.width = '0%';
-        recordedChunks = [];
+        audioChunks = [];
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => {
@@ -358,34 +438,34 @@
 
             mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
             mediaRecorder.ondataavailable = e => {
-                if (e.data.size > 0) recordedChunks.push(e.data);
+                if (e.data.size > 0) audioChunks.push(e.data);
             };
 
-            var webmBlob;
+            let capturedBlob;
             mediaRecorder.onstop = async () => {
-                webmBlob = new Blob(recordedChunks, { type: 'audio/webm' });
-                if (progressInterval) clearInterval(progressInterval);
+                capturedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                if (timerInterval) clearInterval(timerInterval);
                 progressBar.style.width = '90%';
-                statusNote.textContent = "Đang chuyển đổi sang MP3 chuẩn...";
+                statusText.textContent = "Đang mã hóa sang định dạng MP3 chất lượng cao...";
                 
                 try {
-                    audioBlobForMp3 = await convertWebmToMp3(webmBlob);
-                    audioPreview.src = URL.createObjectURL(audioBlobForMp3);
+                    finalMp3Blob = await convertWebmToMp3(capturedBlob);
+                    audioPreview.src = URL.createObjectURL(finalMp3Blob);
                     progressBar.style.width = '100%';
-                    statusNote.textContent = "✨ Hoàn tất! Bạn có thể nghe thử hoặc bấm tải xuống.";
-                } catch (e) {
-                    console.error(e);
-                    audioBlobForMp3 = webmBlob;
-                    audioPreview.src = URL.createObjectURL(webmBlob);
+                    statusText.textContent = "✨ Hoàn thành! File MP3 giọng nam trầm đã sẵn sàng.";
+                } catch (err) {
+                    console.error(err);
+                    finalMp3Blob = capturedBlob;
+                    audioPreview.src = URL.createObjectURL(capturedBlob);
                     progressBar.style.width = '100%';
-                    statusNote.textContent = "Hoàn tất tạo âm thanh!";
+                    statusText.textContent = "Đã tạo âm thanh thành công!";
                 }
 
                 setTimeout(() => {
                     progressContainer.style.display = 'none';
                 }, 1000);
 
-                speakBtn.disabled = false;
+                generateBtn.disabled = false;
                 stopBtn.style.display = 'none';
             };
 
@@ -393,31 +473,31 @@
 
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
-            const selectedIndex = voiceSelect.value;
-            if (selectedIndex !== "" && voices[selectedIndex]) {
-                utterance.voice = voices[selectedIndex];
+            
+            const selectedIdx = voiceSelect.value;
+            if (selectedIdx !== "" && systemVoices[selectedIdx]) {
+                utterance.voice = systemVoices[selectedIdx];
             }
 
-            // Áp dụng thông số tùy chỉnh tốc độ và độ trầm ấm (pitch)
             utterance.rate = parseFloat(rateSlider.value);
-            utterance.pitch = parseFloat(pitchSlider.value);
+            utterance.pitch = parseFloat(pitchSlider.value); // Kéo thấp pitch giúp giọng nam cực kỳ dày và trầm ấm
 
-            let estimatedDuration = (text.length / 15) * (1 / utterance.rate) * 1000;
-            let currentProgress = 0;
-            let increment = 100 / (estimatedDuration / 100);
+            let estimatedDuration = (text.length / 14) * (1 / utterance.rate) * 1000;
+            let currentWidth = 0;
+            let step = 100 / (estimatedDuration / 100);
 
             utterance.onstart = () => {
-                statusNote.textContent = "🔊 Đang đọc văn bản trầm ấm...";
-                progressInterval = setInterval(() => {
-                    currentProgress += increment;
-                    if (currentProgress < 85) {
-                        progressBar.style.width = currentProgress + '%';
+                statusText.textContent = "🔊 Đang đọc với chất giọng nam trầm ấm...";
+                timerInterval = setInterval(() => {
+                    currentWidth += step;
+                    if (currentWidth < 85) {
+                        progressBar.style.width = currentWidth + '%';
                     }
                 }, 100);
             };
 
             utterance.onend = () => {
-                if (progressInterval) clearInterval(progressInterval);
+                if (timerInterval) clearInterval(timerInterval);
                 setTimeout(() => {
                     if (mediaRecorder && mediaRecorder.state === "recording") {
                         mediaRecorder.stop();
@@ -426,66 +506,66 @@
             };
 
             utterance.onerror = () => {
-                resetState();
-                statusNote.textContent = "Có lỗi xảy ra khi đọc.";
+                abortProcess();
+                statusText.textContent = "Đã xảy ra lỗi trong quá trình xử lý.";
             };
 
             window.speechSynthesis.speak(utterance);
 
-        } catch (err) {
-            speakBtn.disabled = false;
+        } catch (error) {
+            generateBtn.disabled = false;
             stopBtn.style.display = 'none';
             progressContainer.style.display = 'none';
-            statusNote.textContent = "Cần quyền micro để xử lý.";
-            alert("Vui lòng cấp quyền micro cho trang web.");
+            statusText.textContent = "Cần quyền micro để xuất file MP3 trực tiếp.";
+            alert("Vui lòng cấp quyền micro để ghi lại âm thanh.");
         }
     });
 
     async function convertWebmToMp3(webmBlob) {
-        const arrayBuffer = await webmBlob.arrayBuffer();
+        const buffer = await webmBlob.arrayBuffer();
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        const decoded = await audioCtx.decodeAudioData(buffer);
 
         const channels = 1;
-        const sampleRate = audioBuffer.sampleRate;
-        const samples = audioBuffer.getChannelData(0);
+        const sampleRate = decoded.sampleRate;
+        const inputData = decoded.getChannelData(0);
 
-        const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, 128);
-        const sampleBlockSize = 1152;
-        const mp3Data = [];
+        const encoder = new lamejs.Mp3Encoder(channels, sampleRate, 128);
+        const blockSize = 1152;
+        const mp3Buffers = [];
 
-        const left = new Int16Array(samples.length);
-        for (let i = 0; i < samples.length; i++) {
-            left[i] = samples[i] < 0 ? samples[i] * 0x8000 : samples[i] * 0x7FFF;
+        const pcmSamples = new Int16Array(inputData.length);
+        for (let i = 0; i < inputData.length; i++) {
+            pcmSamples[i] = inputData[i] < 0 ? inputData[i] * 0x8000 : inputData[i] * 0x7FFF;
         }
 
-        for (let i = 0; i < left.length; i += sampleBlockSize) {
-            const chunk = left.subarray(i, i + sampleBlockSize);
-            const mp3buf = mp3encoder.encodeBuffer(chunk);
-            if (mp3buf.length > 0) {
-                mp3Data.push(new Int8Array(mp3buf));
+        for (let i = 0; i < pcmSamples.length; i += blockSize) {
+            const chunk = pcmSamples.subarray(i, i + blockSize);
+            const encodedChunk = encoder.encodeBuffer(chunk);
+            if (encodedChunk.length > 0) {
+                mp3Buffers.push(new Int8Array(encodedChunk));
             }
         }
 
-        const mp3buf = mp3encoder.flush();
-        if (mp3buf.length > 0) {
-            mp3Data.push(new Int8Array(mp3buf));
+        const finalFlush = encoder.flush();
+        if (finalFlush.length > 0) {
+            mp3Buffers.push(new Int8Array(finalFlush));
         }
 
-        return new Blob(mp3Data, { type: 'audio/mp3' });
+        return new Blob(mp3Buffers, { type: 'audio/mp3' });
     }
 
-    downloadMp3Btn.addEventListener('click', () => {
-        if (!audioBlobForMp3) {
-            alert('Bạn cần bấm "Bắt đầu Đọc & Ghi" trước khi tải xuống!');
+    downloadBtn.addEventListener('click', () => {
+        if (!finalMp3Blob) {
+            alert('Bạn cần bấm nút "Bắt Đầu Đọc & Ghi Âm" trước!');
             return;
         }
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(audioBlobForMp3);
-        a.download = `voice-deep-${Date.now()}.mp3`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(finalMp3Blob);
+        link.download = `deep-male-voice-${Date.now()}.mp3`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     });
 </script>
 
