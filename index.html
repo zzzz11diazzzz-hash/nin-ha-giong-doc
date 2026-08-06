@@ -205,8 +205,9 @@
         #stop-btn { background-color: var(--danger); display: none; }
         #stop-btn:hover { background-color: #dc2626; }
 
-        #download-btn { background-color: var(--success); }
-        #download-btn:hover { background-color: #059669; }
+        #download-btn { background-color: var(--success); opacity: 0.6; cursor: not-allowed; }
+        #download-btn.active { opacity: 1; cursor: pointer; }
+        #download-btn:hover.active { background-color: #059669; }
 
         .preview-box {
             background: rgba(9, 13, 22, 0.6);
@@ -237,7 +238,6 @@
     <label for="text-input">Nội dung văn bản cần chuyển đổi:</label>
     <textarea id="text-input" placeholder="Nhập câu chuyện hoặc văn bản của bạn vào đây..."></textarea>
     
-    <!-- Thanh nút tạo nhanh mẫu văn bản -->
     <div class="quick-templates">
         <button type="button" class="template-chip" onclick="setTemplate('story')">📖 Kể chuyện</button>
         <button type="button" class="template-chip" onclick="setTemplate('review')">🎬 Review Phim</button>
@@ -250,7 +250,6 @@
         <option value="">Đang quét bộ lọc giọng đọc...</option>
     </select>
 
-    <!-- Bảng điều khiển thông số mở rộng -->
     <div class="controls-grid">
         <div class="control-group">
             <div class="control-header">
@@ -299,18 +298,18 @@
 
     <div class="actions">
         <div class="main-row">
-            <button id="generate-btn">🎙️ Bắt Đầu Đọc & Ghi Âm</button>
+            <button id="generate-btn">🎙️ Bắt Đầu Đọc Văn Bản</button>
             <button id="stop-btn">⏹️ Dừng Lại</button>
         </div>
-        <button id="download-btn">📥 Tải Xuống File MP3 Chất Lượng Cao</button>
+        <button id="download-btn" disabled>📥 Tải Xuống File Âm Thanh</button>
     </div>
 
     <div class="preview-box">
-        <label style="margin-bottom: 6px; font-size: 10px;">Nghe trước kết quả:</label>
+        <label style="margin-bottom: 6px; font-size: 10px;">Trạng thái phát:</label>
         <audio id="audio-preview" controls></audio>
     </div>
 
-    <div class="status" id="status-text">Hệ thống sẵn sàng tạo giọng đọc chuyên nghiệp.</div>
+    <div class="status" id="status-text">Hệ thống sẵn sàng tạo giọng đọc chuyên nghiệp không cần quyền micro.</div>
 </div>
 
 <script>
@@ -336,12 +335,8 @@
     const progressBar = document.getElementById('progress-bar');
 
     let systemVoices = [];
-    let mediaRecorder;
-    let audioChunks = [];
-    let finalMp3Blob = null;
-    let timerInterval = null;
+    let synth = window.speechSynthesis;
 
-    // Cập nhật giá trị hiển thị trên slider
     pitchSlider.oninput = () => pitchVal.textContent = parseFloat(pitchSlider.value).toFixed(2) + 'x';
     rateSlider.oninput = () => rateVal.textContent = parseFloat(rateSlider.value).toFixed(2) + 'x';
     stabilitySlider.oninput = () => stabilityVal.textContent = stabilitySlider.value + '%';
@@ -362,8 +357,8 @@
     }
 
     function populateVoices() {
-        if (!('speechSynthesis' in window)) return;
-        systemVoices = window.speechSynthesis.getVoices();
+        if (!synth) return;
+        systemVoices = synth.getVoices();
         if (systemVoices.length === 0) return;
 
         voiceSelect.innerHTML = '';
@@ -391,15 +386,13 @@
     }
 
     populateVoices();
-    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = populateVoices;
+    if (synth && synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = populateVoices;
     }
     setTimeout(populateVoices, 500);
 
     function abortProcess() {
-        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-        if (timerInterval) clearInterval(timerInterval);
+        if (synth) synth.cancel();
         progressContainer.style.display = 'none';
         progressBar.style.width = '0%';
         generateBtn.disabled = false;
@@ -409,14 +402,14 @@
 
     stopBtn.addEventListener('click', abortProcess);
 
-    generateBtn.addEventListener('click', async () => {
+    generateBtn.addEventListener('click', () => {
         const text = textInput.value.trim();
         if (!text) {
             alert('Vui lòng nhập nội dung văn bản cần chuyển đổi!');
             return;
         }
 
-        if (!('speechSynthesis' in window)) {
+        if (!synth) {
             alert('Trình duyệt không hỗ trợ đọc văn bản!');
             return;
         }
@@ -425,149 +418,47 @@
         stopBtn.style.display = 'flex';
         progressContainer.style.display = 'block';
         progressBar.style.width = '0%';
-        audioChunks = [];
 
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => {
-                throw new Error("Microphone access denied");
-            });
+        synth.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        const selectedIdx = voiceSelect.value;
+        if (selectedIdx !== "" && systemVoices[selectedIdx]) {
+            utterance.voice = systemVoices[selectedIdx];
+        }
 
-            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-            mediaRecorder.ondataavailable = e => {
-                if (e.data.size > 0) audioChunks.push(e.data);
-            };
+        utterance.rate = parseFloat(rateSlider.value);
+        utterance.pitch = parseFloat(pitchSlider.value);
 
-            let capturedBlob;
-            mediaRecorder.onstop = async () => {
-                capturedBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                if (timerInterval) clearInterval(timerInterval);
-                progressBar.style.width = '90%';
-                statusText.textContent = "Đang mã hóa sang định dạng MP3 và áp dụng hiệu ứng phóng đại...";
-
-                try {
-                    finalMp3Blob = await convertWebmToMp3WithAmplification(capturedBlob, parseFloat(amplificationSlider.value));
-                    audioPreview.src = URL.createObjectURL(finalMp3Blob);
-                    progressBar.style.width = '100%';
-                    statusText.textContent = "✨ Hoàn thành! Âm thanh đã sẵn sàng để phát hoặc tải xuống.";
-                } catch (err) {
-                    console.error(err);
-                    finalMp3Blob = capturedBlob;
-                    audioPreview.src = URL.createObjectURL(capturedBlob);
-                    progressBar.style.width = '100%';
-                    statusText.textContent = "Đã tạo âm thanh thành công!";
-                }
-
-                setTimeout(() => {
-                    progressContainer.style.display = 'none';
-                }, 1000);
-
-                generateBtn.disabled = false;
-                stopBtn.style.display = 'none';
-            };
-
-            mediaRecorder.start();
-
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            const selectedIdx = voiceSelect.value;
-            if (selectedIdx !== "" && systemVoices[selectedIdx]) {
-                utterance.voice = systemVoices[selectedIdx];
+        let estimatedDuration = (text.length / 14) * (1 / utterance.rate) * 1000;
+        let currentWidth = 0;
+        let step = 100 / (estimatedDuration / 100);
+        let timerInterval = setInterval(() => {
+            currentWidth += step;
+            if (currentWidth < 95) {
+                progressBar.style.width = currentWidth + '%';
             }
+        }, 100);
 
-            utterance.rate = parseFloat(rateSlider.value);
-            utterance.pitch = parseFloat(pitchSlider.value);
+        utterance.onstart = () => {
+            statusText.textContent = `🔊 Đang đọc văn bản trực tiếp...`;
+        };
 
-            let estimatedDuration = (text.length / 14) * (1 / utterance.rate) * 1000;
-            let currentWidth = 0;
-            let step = 100 / (estimatedDuration / 100);
-
-            utterance.onstart = () => {
-                statusText.textContent = `🔊 Đang đọc (Ổn định: ${stabilitySlider.value}%, Tương đồng: ${similaritySlider.value}%)...`;
-                timerInterval = setInterval(() => {
-                    currentWidth += step;
-                    if (currentWidth < 85) {
-                        progressBar.style.width = currentWidth + '%';
-                    }
-                }, 100);
-            };
-
-            utterance.onend = () => {
-                if (timerInterval) clearInterval(timerInterval);
-                setTimeout(() => {
-                    if (mediaRecorder && mediaRecorder.state === "recording") {
-                        mediaRecorder.stop();
-                    }
-                }, 500);
-            };
-
-            utterance.onerror = () => {
-                abortProcess();
-                statusText.textContent = "Lỗi trong quá trình tổng hợp âm thanh.";
-            };
-
-            window.speechSynthesis.speak(utterance);
-
-        } catch (error) {
+        utterance.onend = () => {
+            clearInterval(timerInterval);
+            progressBar.style.width = '100%';
+            statusText.textContent = "✨ Đọc hoàn tất!";
             generateBtn.disabled = false;
             stopBtn.style.display = 'none';
-            progressContainer.style.display = 'none';
-            statusText.textContent = "Yêu cầu quyền truy cập micro để xử lý xuất file.";
-            alert("Vui lòng cấp quyền micro để hệ thống ghi lại âm thanh.");
-        }
-    });
+            setTimeout(() => { progressContainer.style.display = 'none'; }, 1000);
+        };
 
-    // Hàm chuyển đổi kèm xử lý khuyếch đại biên độ (Phóng đại - Amplification/Gain)
-    async function convertWebmToMp3WithAmplification(webmBlob, gainFactor) {
-        const buffer = await webmBlob.arrayBuffer();
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const decoded = await audioCtx.decodeAudioData(buffer);
+        utterance.onerror = () => {
+            clearInterval(timerInterval);
+            abortProcess();
+            statusText.textContent = "Lỗi trong quá trình tổng hợp âm thanh.";
+        };
 
-        const channels = 1;
-        const sampleRate = decoded.sampleRate;
-        const inputData = decoded.getChannelData(0);
-
-        const encoder = new lamejs.Mp3Encoder(channels, sampleRate, 128);
-        const blockSize = 1152;
-        const mp3Buffers = [];
-
-        const pcmSamples = new Int16Array(inputData.length);
-        for (let i = 0; i < inputData.length; i++) {
-            // Áp dụng hệ số phóng đại (Gain / Amplification)
-            let amplified = inputData[i] * gainFactor;
-            // Giới hạn biên độ để tránh bị vỡ tiếng (clipping)
-            if (amplified > 1.0) amplified = 1.0;
-            if (amplified < -1.0) amplified = -1.0;
-
-            pcmSamples[i] = amplified < 0 ? amplified * 0x8000 : amplified * 0x7FFF;
-        }
-
-        for (let i = 0; i < pcmSamples.length; i += blockSize) {
-            const chunk = pcmSamples.subarray(i, i + blockSize);
-            const encodedChunk = encoder.encodeBuffer(chunk);
-            if (encodedChunk.length > 0) {
-                mp3Buffers.push(new Int8Array(encodedChunk));
-            }
-        }
-
-        const finalFlush = encoder.flush();
-        if (finalFlush.length > 0) {
-            mp3Buffers.push(new Int8Array(finalFlush));
-        }
-
-        return new Blob(mp3Buffers, { type: 'audio/mp3' });
-    }
-
-    downloadBtn.addEventListener('click', () => {
-        if (!finalMp3Blob) {
-            alert('Bạn cần bấm nút "Bắt Đầu Đọc & Ghi Âm" trước!');
-            return;
-        }
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(finalMp3Blob);
-        link.download = `voicecraft-audio-${Date.now()}.mp3`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        synth.speak(utterance);
     });
 </script>
 
