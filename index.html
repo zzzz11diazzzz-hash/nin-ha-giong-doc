@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Mark - Đơn Giản & Tốc Độ</title>
+    <title>Voice Mark AI Pro - Deep Voice Edition</title>
+    <!-- Thư viện lamejs chuẩn qua CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
     <style>
         :root {
-            --primary: #4f46e5;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
-            --muted: #94a3b8;
-            --border: #334155;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
         }
+
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -25,231 +30,463 @@
             align-items: center;
             min-height: 100vh;
         }
-        .box {
-            background: var(--card);
-            padding: 30px;
-            border-radius: 16px;
+
+        .container {
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 550px;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            max-width: 650px;
+            border: 1px solid var(--border-color);
         }
-        h2 { text-align: center; margin-top: 0; margin-bottom: 20px; }
-        label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
-        textarea, select {
+
+        h2 {
+            color: var(--text-color);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        textarea {
             width: 100%;
-            padding: 12px;
-            background: #0f172a;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 14px;
+            height: 140px;
+            padding: 14px;
+            background-color: #0f172a;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            resize: vertical;
+            font-size: 15px;
             box-sizing: border-box;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-family: inherit;
         }
-        textarea { height: 110px; resize: vertical; }
-        .row {
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            background-color: #0f172a;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 15px;
+            box-sizing: border-box;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .sliders-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 15px;
-            margin-bottom: 15px;
-            background: rgba(15, 23, 42, 0.4);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            margin-bottom: 25px;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
         }
-        .control-group label { font-size: 11px; margin-bottom: 4px; }
-        .control-group { display: flex; flex-direction: column; gap: 4px; }
-        .control-header { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
-        .control-header span { color: var(--primary); font-weight: bold; }
-        input[type="range"] { width: 100%; accent-color: var(--primary); cursor: pointer; }
-        .btns { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-        button {
-            padding: 12px;
-            border: none;
+
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .slider-header span:last-child {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #0f172a;
             border-radius: 8px;
-            font-size: 14px;
+            height: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            transition: width 0.2s ease;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .main-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            cursor: pointer;
             font-weight: 600;
             color: white;
-            cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        #speak-btn { background: var(--primary); }
-        #speak-btn:hover { background: #4338ca; }
-        #download-btn { background: #10b981; display: none; }
-        #download-btn:hover { background: #059669; }
-        audio { width: 100%; margin-top: 15px; border-radius: 8px; }
-        .status { font-size: 12px; color: var(--muted); text-align: center; margin-top: 10px; }
+
+        #speak-btn { background-color: var(--primary-color); }
+        #speak-btn:hover { background-color: var(--primary-hover); }
+
+        #stop-btn { background-color: var(--danger-color); display: none; }
+        #stop-btn:hover { background-color: #dc2626; }
+
+        #download-mp3-btn { background-color: var(--success-color); }
+        #download-mp3-btn:hover { background-color: #059669; }
+
+        .preview-section {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        audio {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .note {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>🎙️ Voice Mark Đơn Giản</h2>
+<div class="container">
+    <h2>🎙️ Voice Mark AI Pro (Đa Giọng + Trầm Ấm)</h2>
     
-    <label>Văn bản tiếng Anh:</label>
-    <textarea id="text" placeholder="Nhập văn bản vào đây..."></textarea>
+    <label for="text-input">Nội dung tiếng Anh:</label>
+    <textarea id="text-input" placeholder="Nhập câu chuyện hoặc văn bản của bạn vào đây..."></textarea>
     
-    <label>Chọn giọng đọc (Ưu tiên giọng trầm ấm / tự nhiên):</label>
-    <select id="voice"><option value="">Đang tải giọng...</option></select>
+    <label for="voice-select">Chọn giọng đọc tiếng Anh:</label>
+    <select id="voice-select">
+        <option value="">Đang tải danh sách giọng...</option>
+    </select>
 
-    <div class="row">
-        <div class="control-group">
-            <div class="control-header"><span>Tốc độ (Speed)</span><span id="rate-val">0.9x</span></div>
-            <input type="range" id="rate" min="0.5" max="1.5" step="0.05" value="0.9">
+    <div class="sliders-grid">
+        <div class="slider-group">
+            <div class="slider-header">
+                <label style="margin:0; font-size:12px;">Độ trầm ấm (Pitch - Kéo nhỏ để giọng trầm dày)</label>
+                <span id="pitch-val">0.75x</span>
+            </div>
+            <input type="range" id="pitch-slider" min="0.5" max="1.2" step="0.05" value="0.75">
         </div>
-        <div class="control-group">
-            <div class="control-header"><span>Độ trầm (Pitch)</span><span id="pitch-val">0.9</span></div>
-            <input type="range" id="pitch" min="0.5" max="1.5" step="0.05" value="0.9">
+
+        <div class="slider-group">
+            <div class="slider-header">
+                <label style="margin:0; font-size:12px;">Tốc độ đọc (Speed - Kéo chậm lại để kể chuyện)</label>
+                <span id="rate-val">0.85x</span>
+            </div>
+            <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.05" value="0.85">
         </div>
     </div>
 
-    <div class="btns">
-        <button id="speak-btn">🔊 Đọc & Tạo Audio</button>
-        <button id="download-btn">📥 Tải Xuống MP3 (CapCut)</button>
+    <!-- Thanh tiến trình -->
+    <div class="progress-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
     </div>
 
-    <audio id="audio-player" controls></audio>
-    <div class="status" id="status">Sẵn sàng.</div>
+    <div class="btn-group">
+        <div class="main-btns">
+            <button id="speak-btn">🎙️ Bắt đầu Đọc & Ghi</button>
+            <button id="stop-btn">⏹️ Dừng Lại</button>
+        </div>
+        <button id="download-mp3-btn">📥 Tải Xuống File MP3 (CapCut)</button>
+    </div>
+    
+    <div class="preview-section">
+        <label style="margin-bottom: 6px; font-size: 11px;">Nghe lại trước khi tải:</label>
+        <audio id="audio-preview" controls></audio>
+    </div>
+
+    <div class="note" id="status-note">Hệ thống sẵn sàng tạo âm thanh.</div>
 </div>
 
 <script>
-    const textInput = document.getElementById('text');
-    const voiceSelect = document.getElementById('voice');
-    const rateSlider = document.getElementById('rate');
-    const rateVal = document.getElementById('rate-val');
-    const pitchSlider = document.getElementById('pitch');
+    const textInput = document.getElementById('text-input');
+    const voiceSelect = document.getElementById('voice-select');
+    const pitchSlider = document.getElementById('pitch-slider');
     const pitchVal = document.getElementById('pitch-val');
+    const rateSlider = document.getElementById('rate-slider');
+    const rateVal = document.getElementById('rate-val');
+
     const speakBtn = document.getElementById('speak-btn');
-    const downloadBtn = document.getElementById('download-btn');
-    const audioPlayer = document.getElementById('audio-player');
-    const statusText = document.getElementById('status');
+    const stopBtn = document.getElementById('stop-btn');
+    const downloadMp3Btn = document.getElementById('download-mp3-btn');
+    const audioPreview = document.getElementById('audio-preview');
+    const statusNote = document.getElementById('status-note');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
 
     let voices = [];
     let mediaRecorder;
-    let chunks = [];
-    let mp3Blob = null;
+    let recordedChunks = [];
+    let audioBlobForMp3 = null;
+    let progressInterval = null;
 
+    pitchSlider.oninput = () => pitchVal.textContent = parseFloat(pitchSlider.value).toFixed(2) + 'x';
     rateSlider.oninput = () => rateVal.textContent = parseFloat(rateSlider.value).toFixed(2) + 'x';
-    pitchSlider.oninput = () => pitchVal.textContent = parseFloat(pitchSlider.value).toFixed(2);
 
     function loadVoices() {
         if (!('speechSynthesis' in window)) return;
         voices = window.speechSynthesis.getVoices();
-        if (!voices.length) return;
+        if (voices.length === 0) return;
 
         voiceSelect.innerHTML = '';
-        voices.forEach((v, i) => {
-            if (v.lang.includes('en')) {
-                let opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = `${v.name} (${v.lang})`;
-                // Ưu tiên chọn các giọng đọc nam trầm ấm phổ biến trên máy tính
-                if (v.name.includes('David') || v.name.includes('Mark') || v.name.includes('Guy') || v.name.includes('Natural') || v.name.includes('James')) {
-                    opt.selected = true;
-                }
-                voiceSelect.appendChild(opt);
+        const englishVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith('en'));
+
+        if (englishVoices.length === 0) {
+            voiceSelect.innerHTML = '<option value="">Không tìm thấy giọng tiếng Anh trên thiết bị này</option>';
+            return;
+        }
+
+        englishVoices.forEach((voice) => {
+            const originalIndex = voices.indexOf(voice);
+            const option = document.createElement('option');
+            option.value = originalIndex;
+            
+            let label = `${voice.name} (${voice.lang})`;
+            if (voice.name.includes('David') || voice.name.includes('Mark') || voice.name.includes('Guy') || voice.name.includes('James')) {
+                label += ' 🎙️ (Giọng nam trầm)';
+                option.selected = true;
+            } else if (voice.name.toLowerCase().includes('natural') || voice.name.toLowerCase().includes('online')) {
+                label += ' ⭐ (Chất lượng cao)';
             }
+            option.textContent = label;
+            voiceSelect.appendChild(option);
         });
     }
 
     loadVoices();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
+    if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
         speechSynthesis.onvoiceschanged = loadVoices;
     }
     setTimeout(loadVoices, 500);
 
-    speakBtn.onclick = async () => {
-        let text = textInput.value.trim();
-        if (!text) { alert('Vui lòng nhập văn bản!'); return; }
+    function resetState() {
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+        if (progressInterval) clearInterval(progressInterval);
+        progressContainer.style.display = 'none';
+        progressBar.style.width = '0%';
+        speakBtn.disabled = false;
+        stopBtn.style.display = 'none';
+        statusNote.textContent = "Đã dừng thao tác.";
+    }
 
-        statusText.textContent = "Đang khởi tạo...";
+    stopBtn.addEventListener('click', resetState);
+
+    speakBtn.addEventListener('click', async () => {
+        const text = textInput.value.trim();
+        if (!text) {
+            alert('Vui lòng nhập nội dung văn bản!');
+            return;
+        }
+
+        if (!('speechSynthesis' in window)) {
+            alert('Trình duyệt của bạn không hỗ trợ đọc văn bản!');
+            return;
+        }
+
+        statusNote.textContent = "Đang khởi tạo tiến trình đọc...";
         speakBtn.disabled = true;
-        chunks = [];
+        stopBtn.style.display = 'flex';
+        progressContainer.style.display = 'block';
+        progressBar.style.width = '0%';
+        recordedChunks = [];
 
         try {
-            let stream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => {
-                let ctx = new AudioContext();
-                return ctx.createMediaStreamDestination().stream;
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => {
+                const ctx = new AudioContext();
+                const dest = ctx.createMediaStreamDestination();
+                return dest.stream;
             });
 
             mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-            
+            mediaRecorder.ondataavailable = e => {
+                if (e.data.size > 0) recordedChunks.push(e.data);
+            };
+
+            var webmBlob;
             mediaRecorder.onstop = async () => {
-                statusText.textContent = "Đang xuất file MP3...";
-                let webmBlob = new Blob(chunks, { type: 'audio/webm' });
+                webmBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+                if (progressInterval) clearInterval(progressInterval);
+                progressBar.style.width = '90%';
+                statusNote.textContent = "Đang chuyển đổi sang MP3 chuẩn...";
+                
                 try {
-                    mp3Blob = await convertToMp3(webmBlob);
-                    audioPlayer.src = URL.createObjectURL(mp3Blob);
-                    downloadBtn.style.display = 'block';
-                    statusText.textContent = "Hoàn tất! Bạn có thể nghe thử hoặc tải xuống.";
-                } catch(err) {
-                    audioPlayer.src = URL.createObjectURL(webmBlob);
-                    mp3Blob = webmBlob;
-                    downloadBtn.style.display = 'block';
-                    statusText.textContent = "Hoàn tất!";
+                    audioBlobForMp3 = await convertWebmToMp3(webmBlob);
+                    audioPreview.src = URL.createObjectURL(audioBlobForMp3);
+                    progressBar.style.width = '100%';
+                    statusNote.textContent = "✨ Hoàn tất! Bạn có thể nghe thử hoặc bấm tải xuống.";
+                } catch (e) {
+                    console.error(e);
+                    audioBlobForMp3 = webmBlob;
+                    audioPreview.src = URL.createObjectURL(webmBlob);
+                    progressBar.style.width = '100%';
+                    statusNote.textContent = "Hoàn tất tạo âm thanh!";
                 }
+
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                }, 1000);
+
                 speakBtn.disabled = false;
+                stopBtn.style.display = 'none';
             };
 
             mediaRecorder.start();
 
             window.speechSynthesis.cancel();
-            let utterance = new SpeechSynthesisUtterance(text);
-            let vIdx = voiceSelect.value;
-            if (vIdx !== "" && voices[vIdx]) utterance.voice = voices[vIdx];
-            
-            utterance.rate = parseFloat(rateSlider.value);
-            utterance.pitch = parseFloat(pitchSlider.value); // Chỉnh độ trầm bổng tại đây
+            const utterance = new SpeechSynthesisUtterance(text);
+            const selectedIndex = voiceSelect.value;
+            if (selectedIndex !== "" && voices[selectedIndex]) {
+                utterance.voice = voices[selectedIndex];
+            }
 
-            utterance.onstart = () => { statusText.textContent = "🔊 Đang đọc..."; };
+            // Áp dụng thông số tùy chỉnh tốc độ và độ trầm ấm (pitch)
+            utterance.rate = parseFloat(rateSlider.value);
+            utterance.pitch = parseFloat(pitchSlider.value);
+
+            let estimatedDuration = (text.length / 15) * (1 / utterance.rate) * 1000;
+            let currentProgress = 0;
+            let increment = 100 / (estimatedDuration / 100);
+
+            utterance.onstart = () => {
+                statusNote.textContent = "🔊 Đang đọc văn bản trầm ấm...";
+                progressInterval = setInterval(() => {
+                    currentProgress += increment;
+                    if (currentProgress < 85) {
+                        progressBar.style.width = currentProgress + '%';
+                    }
+                }, 100);
+            };
+
             utterance.onend = () => {
+                if (progressInterval) clearInterval(progressInterval);
                 setTimeout(() => {
-                    if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+                    if (mediaRecorder && mediaRecorder.state === "recording") {
+                        mediaRecorder.stop();
+                    }
                 }, 400);
+            };
+
+            utterance.onerror = () => {
+                resetState();
+                statusNote.textContent = "Có lỗi xảy ra khi đọc.";
             };
 
             window.speechSynthesis.speak(utterance);
 
-        } catch (e) {
+        } catch (err) {
             speakBtn.disabled = false;
-            statusText.textContent = "Lỗi micro hoặc trình duyệt.";
+            stopBtn.style.display = 'none';
+            progressContainer.style.display = 'none';
+            statusNote.textContent = "Cần quyền micro để xử lý.";
+            alert("Vui lòng cấp quyền micro cho trang web.");
         }
-    };
+    });
 
-    async function convertToMp3(webmBlob) {
-        let buffer = await webmBlob.arrayBuffer();
-        let ctx = new (window.AudioContext || window.webkitAudioContext)();
-        let decoded = await ctx.decodeAudioData(buffer);
-        let samples = decoded.getChannelData(0);
-        let encoder = new lamejs.Mp3Encoder(1, decoded.sampleRate, 128);
-        let blockSize = 1152;
-        let mp3Data = [];
+    async function convertWebmToMp3(webmBlob) {
+        const arrayBuffer = await webmBlob.arrayBuffer();
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
 
-        let pcm = new Int16Array(samples.length);
+        const channels = 1;
+        const sampleRate = audioBuffer.sampleRate;
+        const samples = audioBuffer.getChannelData(0);
+
+        const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, 128);
+        const sampleBlockSize = 1152;
+        const mp3Data = [];
+
+        const left = new Int16Array(samples.length);
         for (let i = 0; i < samples.length; i++) {
-            pcm[i] = samples[i] < 0 ? samples[i] * 32768 : samples[i] * 32767;
+            left[i] = samples[i] < 0 ? samples[i] * 0x8000 : samples[i] * 0x7FFF;
         }
 
-        for (let i = 0; i < pcm.length; i += blockSize) {
-            let chunk = pcm.subarray(i, i + blockSize);
-            let encodedBuf = encoder.encodeBuffer(chunk);
-            if (encodedBuf.length > 0) mp3Data.push(new Int8Array(encodedBuf));
+        for (let i = 0; i < left.length; i += sampleBlockSize) {
+            const chunk = left.subarray(i, i + sampleBlockSize);
+            const mp3buf = mp3encoder.encodeBuffer(chunk);
+            if (mp3buf.length > 0) {
+                mp3Data.push(new Int8Array(mp3buf));
+            }
         }
-        let endBuf = encoder.flush();
-        if (endBuf.length > 0) mp3Data.push(new Int8Array(endBuf));
+
+        const mp3buf = mp3encoder.flush();
+        if (mp3buf.length > 0) {
+            mp3Data.push(new Int8Array(mp3buf));
+        }
 
         return new Blob(mp3Data, { type: 'audio/mp3' });
     }
 
-    downloadBtn.onclick = () => {
-        if (!mp3Blob) return;
-        let a = document.createElement('a');
-        a.href = URL.createObjectURL(mp3Blob);
-        a.download = `voice-mark-${Date.now()}.mp3`;
+    downloadMp3Btn.addEventListener('click', () => {
+        if (!audioBlobForMp3) {
+            alert('Bạn cần bấm "Bắt đầu Đọc & Ghi" trước khi tải xuống!');
+            return;
+        }
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(audioBlobForMp3);
+        a.download = `voice-deep-${Date.now()}.mp3`;
+        document.body.appendChild(a);
         a.click();
-    };
+        document.body.removeChild(a);
+    });
 </script>
 
 </body>
