@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoiceCraft Studio - Deep Male Vault Edition</title>
+    <title>VoiceCraft Studio - Professional Deep Voice Generator</title>
     <!-- Thư viện lamejs chuẩn qua CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
     <style>
@@ -12,11 +12,11 @@
             --primary-hover: #d97706;
             --danger: #ef4444;
             --success: #10b981;
-            --bg: #07090e;
-            --card: #101522;
-            --text: #f3f4f6;
-            --muted: #9ca3af;
-            --border: #1e2638;
+            --bg: #090d16;
+            --card: #131c31;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --border: #1e293b;
         }
 
         body {
@@ -29,15 +29,16 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
             background: var(--card);
-            padding: 35px;
+            padding: 30px;
             border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 720px;
+            max-width: 700px;
             border: 1px solid var(--border);
         }
 
@@ -56,16 +57,39 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--muted);
-            font-size: 12px;
+            font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+        }
+
+        .quick-templates {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .template-chip {
+            background-color: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .template-chip:hover {
+            background-color: var(--primary);
+            color: #090d16;
         }
 
         textarea {
             width: 100%;
-            height: 140px;
+            height: 130px;
             padding: 15px;
-            background-color: #07090e;
+            background-color: #090d16;
             border: 2px solid var(--border);
             border-radius: 14px;
             resize: vertical;
@@ -81,42 +105,17 @@
             border-color: var(--primary);
         }
 
-        .filter-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-            align-items: center;
-        }
-
-        .filter-btn {
-            background: #1e2638;
-            border: 1px solid var(--border);
-            color: var(--muted);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .filter-btn.active {
-            background: var(--primary);
-            color: #07090e;
-            border-color: var(--primary);
-        }
-
         select {
             width: 100%;
             padding: 14px;
-            background-color: #07090e;
+            margin-bottom: 20px;
+            background-color: #090d16;
             border: 2px solid var(--border);
             border-radius: 14px;
             font-size: 15px;
             box-sizing: border-box;
             color: var(--text);
             cursor: pointer;
-            margin-bottom: 20px;
         }
 
         .controls-grid {
@@ -124,7 +123,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 25px;
-            background: rgba(7, 9, 14, 0.6);
+            background: rgba(9, 13, 22, 0.6);
             padding: 20px;
             border-radius: 16px;
             border: 1px solid var(--border);
@@ -139,7 +138,7 @@
         .control-header {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--muted);
         }
 
@@ -156,7 +155,7 @@
 
         .progress-box {
             width: 100%;
-            background-color: #07090e;
+            background-color: #090d16;
             border-radius: 8px;
             height: 10px;
             margin-bottom: 20px;
@@ -184,7 +183,7 @@
             gap: 12px;
         }
 
-        button.action-btn {
+        button {
             flex: 1;
             padding: 15px;
             border: none;
@@ -200,7 +199,7 @@
             gap: 8px;
         }
 
-        #generate-btn { background-color: var(--primary); color: #07090e; }
+        #generate-btn { background-color: var(--primary); color: #090d16; }
         #generate-btn:hover { background-color: var(--primary-hover); }
 
         #stop-btn { background-color: var(--danger); display: none; }
@@ -210,7 +209,7 @@
         #download-btn:hover { background-color: #059669; }
 
         .preview-box {
-            background: rgba(7, 9, 14, 0.6);
+            background: rgba(9, 13, 22, 0.6);
             padding: 15px;
             border-radius: 14px;
             border: 1px solid var(--border);
@@ -219,7 +218,6 @@
 
         audio {
             width: 100%;
-            border-radius: 8px;
             display: block;
         }
 
@@ -234,31 +232,32 @@
 <body>
 
 <div class="container">
-    <h2>🎙️ VoiceCraft Studio (Deep Male Vault)</h2>
-    
+    <h2>🎙️ VoiceCraft Studio (Advanced Edition)</h2>
+
     <label for="text-input">Nội dung văn bản cần chuyển đổi:</label>
-    <textarea id="text-input" placeholder="Nhập câu chuyện, kịch bản hoặc văn bản cần đọc bằng giọng nam trầm..."></textarea>
+    <textarea id="text-input" placeholder="Nhập câu chuyện hoặc văn bản của bạn vào đây..."></textarea>
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <label style="margin:0;">Kho Tàng Giọng Đọc</label>
-        <div class="filter-box" style="margin:0;">
-            <button type="button" class="filter-btn active" id="filter-all" onclick="setFilter('all')">Tất cả</button>
-            <button type="button" class="filter-btn" id="filter-male" onclick="setFilter('male')">Chỉ Giọng Nam 🎙️</button>
-        </div>
+    <!-- Thanh nút tạo nhanh mẫu văn bản -->
+    <div class="quick-templates">
+        <button type="button" class="template-chip" onclick="setTemplate('story')">📖 Kể chuyện</button>
+        <button type="button" class="template-chip" onclick="setTemplate('review')">🎬 Review Phim</button>
+        <button type="button" class="template-chip" onclick="setTemplate('quote')">💡 Câu nói hay</button>
+        <button type="button" class="template-chip" onclick="setTemplate('tips')">🚀 Mẹo hay</button>
     </div>
 
+    <label for="voice-select">Lựa chọn chất giọng:</label>
     <select id="voice-select">
-        <option value="">Đang tải danh sách giọng...</option>
+        <option value="">Đang quét bộ lọc giọng đọc...</option>
     </select>
 
+    <!-- Bảng điều khiển thông số mở rộng -->
     <div class="controls-grid">
         <div class="control-group">
             <div class="control-header">
-                <label style="margin:0; font-size:11px;">Độ Trầm Ấm / Cao Độ (Pitch)</label>
-                <span id="pitch-val">0.65x</span>
+                <label style="margin:0; font-size:11px;">Độ Trầm Ấm (Pitch)</label>
+                <span id="pitch-val">0.70x</span>
             </div>
-            <!-- Mặc định kéo xuống 0.65 để tạo độ trầm ấm dày đặc tối đa cho giọng nam -->
-            <input type="range" id="pitch-slider" min="0.3" max="1.0" step="0.05" value="0.65">
+            <input type="range" id="pitch-slider" min="0.4" max="1.0" step="0.05" value="0.70">
         </div>
 
         <div class="control-group">
@@ -268,6 +267,30 @@
             </div>
             <input type="range" id="rate-slider" min="0.5" max="1.3" step="0.05" value="0.85">
         </div>
+
+        <div class="control-group">
+            <div class="control-header">
+                <label style="margin:0; font-size:11px;">Sự ổn định (Stability)</label>
+                <span id="stability-val">75%</span>
+            </div>
+            <input type="range" id="stability-slider" min="0" max="100" value="75">
+        </div>
+
+        <div class="control-group">
+            <div class="control-header">
+                <label style="margin:0; font-size:11px;">Sự tương đồng (Similarity)</label>
+                <span id="similarity-val">85%</span>
+            </div>
+            <input type="range" id="similarity-slider" min="0" max="100" value="85">
+        </div>
+
+        <div class="control-group" style="grid-column: span 2;">
+            <div class="control-header">
+                <label style="margin:0; font-size:11px;">Phóng đại âm thanh (Amplification / Gain)</label>
+                <span id="amplification-val">1.2x</span>
+            </div>
+            <input type="range" id="amplification-slider" min="1.0" max="3.0" step="0.1" value="1.2">
+        </div>
     </div>
 
     <div class="progress-box" id="progress-container">
@@ -276,18 +299,18 @@
 
     <div class="actions">
         <div class="main-row">
-            <button class="action-btn" id="generate-btn">🎙️ Bắt Đầu Đọc & Ghi Âm</button>
-            <button class="action-btn" id="stop-btn">⏹️ Dừng Lại</button>
+            <button id="generate-btn">🎙️ Bắt Đầu Đọc & Ghi Âm</button>
+            <button id="stop-btn">⏹️ Dừng Lại</button>
         </div>
-        <button class="action-btn" id="download-btn">📥 Tải Xuống File MP3 Chất Lượng Cao</button>
+        <button id="download-btn">📥 Tải Xuống File MP3 Chất Lượng Cao</button>
     </div>
-    
+
     <div class="preview-box">
         <label style="margin-bottom: 6px; font-size: 10px;">Nghe trước kết quả:</label>
         <audio id="audio-preview" controls></audio>
     </div>
 
-    <div class="status" id="status-text">Hệ thống sẵn sàng với bộ lọc chuyên sâu giọng nam trầm.</div>
+    <div class="status" id="status-text">Hệ thống sẵn sàng tạo giọng đọc chuyên nghiệp.</div>
 </div>
 
 <script>
@@ -297,6 +320,12 @@
     const pitchVal = document.getElementById('pitch-val');
     const rateSlider = document.getElementById('rate-slider');
     const rateVal = document.getElementById('rate-val');
+    const stabilitySlider = document.getElementById('stability-slider');
+    const stabilityVal = document.getElementById('stability-val');
+    const similaritySlider = document.getElementById('similarity-slider');
+    const similarityVal = document.getElementById('similarity-val');
+    const amplificationSlider = document.getElementById('amplification-slider');
+    const amplificationVal = document.getElementById('amplification-val');
 
     const generateBtn = document.getElementById('generate-btn');
     const stopBtn = document.getElementById('stop-btn');
@@ -305,30 +334,31 @@
     const statusText = document.getElementById('status-text');
     const progressContainer = document.getElementById('progress-container');
     const progressBar = document.getElementById('progress-bar');
-    
-    const filterAllBtn = document.getElementById('filter-all');
-    const filterMaleBtn = document.getElementById('filter-male');
 
     let systemVoices = [];
-    let currentFilter = 'all';
     let mediaRecorder;
     let audioChunks = [];
     let finalMp3Blob = null;
     let timerInterval = null;
 
+    // Cập nhật giá trị hiển thị trên slider
     pitchSlider.oninput = () => pitchVal.textContent = parseFloat(pitchSlider.value).toFixed(2) + 'x';
     rateSlider.oninput = () => rateVal.textContent = parseFloat(rateSlider.value).toFixed(2) + 'x';
+    stabilitySlider.oninput = () => stabilityVal.textContent = stabilitySlider.value + '%';
+    similaritySlider.oninput = () => similarityVal.textContent = similaritySlider.value + '%';
+    amplificationSlider.oninput = () => amplificationVal.textContent = parseFloat(amplificationSlider.value).toFixed(1) + 'x';
 
-    function setFilter(type) {
-        currentFilter = type;
-        if (type === 'all') {
-            filterAllBtn.classList.add('active');
-            filterMaleBtn.classList.remove('active');
-        } else {
-            filterMaleBtn.classList.add('active');
-            filterAllBtn.classList.remove('active');
+    function setTemplate(type) {
+        const templates = {
+            story: "Once upon a time, in a quiet little village nestled between the mountains, there lived a curious young boy who dreamed of exploring the stars.",
+            review: "You won't believe what happens in the final scene of this movie! It completely twists everything you thought you knew from the beginning.",
+            quote: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            tips: "Here are three quick tips to boost your productivity today: First, prioritize your most important task. Second, eliminate distractions. Third, take short breaks."
+        };
+        if (templates[type]) {
+            textInput.value = templates[type];
+            statusText.textContent = `Đã nạp mẫu: ${type.toUpperCase()}`;
         }
-        populateVoices();
     }
 
     function populateVoices() {
@@ -337,55 +367,24 @@
         if (systemVoices.length === 0) return;
 
         voiceSelect.innerHTML = '';
-
-        // Từ khóa nhận diện giọng nam phổ biến trên các hệ điều hành (Windows, macOS, Android, iOS, ChromeOS)
-        const maleKeywords = [
-            'david', 'mark', 'guy', 'james', 'george', 'ryan', 'oliver', 'harry', 
-            'nathan', 'stefan', 'brian', 'eric', 'thomas', 'daniel', 'richard', 
-            'microsoft zira', 'natural', 'online', 'male', 'nam', 'chiến', 'hùng'
-        ];
-
-        // Từ khóa nhận diện giọng nữ để loại trừ khi bấm nút "Chỉ Giọng Nam"
-        const femaleKeywords = ['zira', 'aria', 'jenny', 'sara', 'helena', 'monica', 'catherine', 'hazel', 'susan', 'linda', 'fema', 'nữ'];
-
-        let filtered = systemVoices.map((voice, index) => ({ voice, index })).filter(item => {
-            const name = item.voice.name.toLowerCase();
-            const lang = item.voice.lang.toLowerCase();
-            
-            if (currentFilter === 'male') {
-                let isFemale = femaleKeywords.some(kw => name.includes(kw));
-                let isMaleExplicit = maleKeywords.some(kw => name.includes(kw));
-                // Nếu tên chứa từ khóa nữ rõ ràng -> loại
-                if (isFemale && !isMaleExplicit) return false;
-                // Ưu tiên các giọng có từ khóa nam hoặc các giọng Anh/Mỹ/Việt chung chưa bị gán nhãn nữ
-                return isMaleExplicit || lang.includes('en') || lang.includes('vi');
-            }
-            return true;
+        systemVoices.sort((a, b) => {
+            const aName = a.name.toLowerCase();
+            const bName = b.name.toLowerCase();
+            const aScore = (aName.includes('david') || aName.includes('mark') || aName.includes('guy') || aName.includes('natural') || aName.includes('google')) ? 1 : 0;
+            const bScore = (bName.includes('david') || bName.includes('mark') || bName.includes('guy') || bName.includes('natural') || bName.includes('google')) ? 1 : 0;
+            return bScore - aScore;
         });
 
-        if (filtered.length === 0) {
-            voiceSelect.innerHTML = '<option value="">Không tìm thấy giọng phù hợp bộ lọc</option>';
-            return;
-        }
-
-        filtered.forEach(item => {
-            const voice = item.voice;
-            const originalIndex = item.index;
+        systemVoices.forEach((voice, index) => {
             const option = document.createElement('option');
-            option.value = originalIndex;
-            
+            option.value = index;
             let label = `${voice.name} (${voice.lang})`;
-            const lowerName = voice.name.toLowerCase();
-
-            if (maleKeywords.some(kw => lowerName.includes(kw))) {
-                label += ' 🎙️ [Nam Trầm Ấm / Kể Chuyện]';
-                if (!option.selected && (lowerName.includes('david') || lowerName.includes('mark') || lowerName.includes('guy'))) {
-                    option.selected = true;
-                }
-            } else if (lowerName.includes('natural') || lowerName.includes('online')) {
-                label += ' ⭐ [Chất Lượng Cao]';
+            if (voice.name.toLowerCase().includes('david') || voice.name.toLowerCase().includes('mark') || voice.name.toLowerCase().includes('guy') || voice.name.toLowerCase().includes('james')) {
+                label += ' 🎙️ [Nam Trầm Ấm]';
+                option.selected = true;
+            } else if (voice.name.toLowerCase().includes('natural') || voice.name.toLowerCase().includes('online')) {
+                label += ' ⭐ [Cao Cấp]';
             }
-
             option.textContent = label;
             voiceSelect.appendChild(option);
         });
@@ -413,7 +412,7 @@
     generateBtn.addEventListener('click', async () => {
         const text = textInput.value.trim();
         if (!text) {
-            alert('Vui lòng nhập nội dung văn bản!');
+            alert('Vui lòng nhập nội dung văn bản cần chuyển đổi!');
             return;
         }
 
@@ -422,7 +421,6 @@
             return;
         }
 
-        statusText.textContent = "Đang cấu hình giọng đọc nam trầm ấm...";
         generateBtn.disabled = true;
         stopBtn.style.display = 'flex';
         progressContainer.style.display = 'block';
@@ -431,9 +429,7 @@
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch(() => {
-                const ctx = new AudioContext();
-                const dest = ctx.createMediaStreamDestination();
-                return dest.stream;
+                throw new Error("Microphone access denied");
             });
 
             mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
@@ -446,13 +442,13 @@
                 capturedBlob = new Blob(audioChunks, { type: 'audio/webm' });
                 if (timerInterval) clearInterval(timerInterval);
                 progressBar.style.width = '90%';
-                statusText.textContent = "Đang mã hóa sang định dạng MP3 chất lượng cao...";
-                
+                statusText.textContent = "Đang mã hóa sang định dạng MP3 và áp dụng hiệu ứng phóng đại...";
+
                 try {
-                    finalMp3Blob = await convertWebmToMp3(capturedBlob);
+                    finalMp3Blob = await convertWebmToMp3WithAmplification(capturedBlob, parseFloat(amplificationSlider.value));
                     audioPreview.src = URL.createObjectURL(finalMp3Blob);
                     progressBar.style.width = '100%';
-                    statusText.textContent = "✨ Hoàn thành! File MP3 giọng nam trầm đã sẵn sàng.";
+                    statusText.textContent = "✨ Hoàn thành! Âm thanh đã sẵn sàng để phát hoặc tải xuống.";
                 } catch (err) {
                     console.error(err);
                     finalMp3Blob = capturedBlob;
@@ -473,21 +469,20 @@
 
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
-            
             const selectedIdx = voiceSelect.value;
             if (selectedIdx !== "" && systemVoices[selectedIdx]) {
                 utterance.voice = systemVoices[selectedIdx];
             }
 
             utterance.rate = parseFloat(rateSlider.value);
-            utterance.pitch = parseFloat(pitchSlider.value); // Kéo thấp pitch giúp giọng nam cực kỳ dày và trầm ấm
+            utterance.pitch = parseFloat(pitchSlider.value);
 
             let estimatedDuration = (text.length / 14) * (1 / utterance.rate) * 1000;
             let currentWidth = 0;
             let step = 100 / (estimatedDuration / 100);
 
             utterance.onstart = () => {
-                statusText.textContent = "🔊 Đang đọc với chất giọng nam trầm ấm...";
+                statusText.textContent = `🔊 Đang đọc (Ổn định: ${stabilitySlider.value}%, Tương đồng: ${similaritySlider.value}%)...`;
                 timerInterval = setInterval(() => {
                     currentWidth += step;
                     if (currentWidth < 85) {
@@ -502,12 +497,12 @@
                     if (mediaRecorder && mediaRecorder.state === "recording") {
                         mediaRecorder.stop();
                     }
-                }, 400);
+                }, 500);
             };
 
             utterance.onerror = () => {
                 abortProcess();
-                statusText.textContent = "Đã xảy ra lỗi trong quá trình xử lý.";
+                statusText.textContent = "Lỗi trong quá trình tổng hợp âm thanh.";
             };
 
             window.speechSynthesis.speak(utterance);
@@ -516,12 +511,13 @@
             generateBtn.disabled = false;
             stopBtn.style.display = 'none';
             progressContainer.style.display = 'none';
-            statusText.textContent = "Cần quyền micro để xuất file MP3 trực tiếp.";
-            alert("Vui lòng cấp quyền micro để ghi lại âm thanh.");
+            statusText.textContent = "Yêu cầu quyền truy cập micro để xử lý xuất file.";
+            alert("Vui lòng cấp quyền micro để hệ thống ghi lại âm thanh.");
         }
     });
 
-    async function convertWebmToMp3(webmBlob) {
+    // Hàm chuyển đổi kèm xử lý khuyếch đại biên độ (Phóng đại - Amplification/Gain)
+    async function convertWebmToMp3WithAmplification(webmBlob, gainFactor) {
         const buffer = await webmBlob.arrayBuffer();
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const decoded = await audioCtx.decodeAudioData(buffer);
@@ -536,7 +532,13 @@
 
         const pcmSamples = new Int16Array(inputData.length);
         for (let i = 0; i < inputData.length; i++) {
-            pcmSamples[i] = inputData[i] < 0 ? inputData[i] * 0x8000 : inputData[i] * 0x7FFF;
+            // Áp dụng hệ số phóng đại (Gain / Amplification)
+            let amplified = inputData[i] * gainFactor;
+            // Giới hạn biên độ để tránh bị vỡ tiếng (clipping)
+            if (amplified > 1.0) amplified = 1.0;
+            if (amplified < -1.0) amplified = -1.0;
+
+            pcmSamples[i] = amplified < 0 ? amplified * 0x8000 : amplified * 0x7FFF;
         }
 
         for (let i = 0; i < pcmSamples.length; i += blockSize) {
@@ -562,7 +564,7 @@
         }
         const link = document.createElement('a');
         link.href = URL.createObjectURL(finalMp3Blob);
-        link.download = `deep-male-voice-${Date.now()}.mp3`;
+        link.download = `voicecraft-audio-${Date.now()}.mp3`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
