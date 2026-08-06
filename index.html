@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Voice Mark AI - Xuất MP3 Chuẩn Cho CapCut</title>
-    <!-- Thư viện hỗ trợ xuất chuẩn MP3 -->
+    <title>Voice Mark AI Pro - Xuất MP3 Cho CapCut</title>
+    <!-- Thư viện hỗ trợ xuất chuẩn MP3 qua CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
     <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -17,146 +30,190 @@
             align-items: center;
             min-height: 100vh;
         }
+
         .container {
-            background: white;
-            padding: 30px 35px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 620px;
+            max-width: 650px;
+            border: 1px solid var(--border-color);
         }
+
         h2 {
-            color: #333;
+            color: var(--text-color);
             text-align: center;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
         }
+
         label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
-            font-size: 14px;
+            color: var(--text-muted);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
+
         textarea {
             width: 100%;
-            height: 130px;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            height: 140px;
+            padding: 14px;
+            background-color: #0f172a;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             resize: vertical;
             font-size: 15px;
             box-sizing: border-box;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            color: var(--text-color);
             font-family: inherit;
+            transition: border-color 0.2s;
         }
+
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
         select {
             width: 100%;
-            padding: 10px 12px;
-            margin-bottom: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            background-color: #0f172a;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             font-size: 15px;
             box-sizing: border-box;
-            background-color: white;
+            color: var(--text-color);
             cursor: pointer;
+            transition: border-color 0.2s;
         }
+
         .sliders-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-            background: #fafbfc;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #eaeaea;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
         }
+
         .slider-group {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
         }
+
         .slider-header {
             display: flex;
             justify-content: space-between;
             font-size: 13px;
-            color: #666;
+            color: var(--text-muted);
         }
+
         .slider-header span:last-child {
-            font-weight: bold;
-            color: #3498db;
+            font-weight: 600;
+            color: var(--primary-color);
         }
+
         input[type="range"] {
             width: 100%;
-            accent-color: #3498db;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
+
         .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
+
         .main-btns {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
+
         button {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 15px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
             color: white;
-            transition: background 0.3s;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
+
         #speak-btn {
-            background-color: #3498db;
+            background-color: var(--primary-color);
         }
         #speak-btn:hover {
-            background-color: #2980b9;
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
         }
+
         #stop-btn {
-            background-color: #e74c3c;
+            background-color: var(--danger-color);
             display: none;
         }
         #stop-btn:hover {
-            background-color: #c0392b;
+            background-color: #dc2626;
         }
+
         #download-mp3-btn {
-            background-color: #27ae60;
+            background-color: var(--success-color);
         }
         #download-mp3-btn:hover {
-            background-color: #219150;
+            background-color: #059669;
+            transform: translateY(-1px);
         }
+
+        .preview-section {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+        }
+
         audio {
             width: 100%;
-            margin-bottom: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
             display: block;
         }
+
         .note {
             font-size: 13px;
-            color: #7f8c8d;
+            color: var(--text-muted);
             text-align: center;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Tạo Voice Mark AI (Xuất MP3 Chuẩn)</h2>
+    <h2>✨ Voice Mark AI Pro</h2>
     
-    <label for="text-input">Nhập nội dung tiếng Anh:</label>
-    <textarea id="text-input" placeholder="Nhập câu chuyện của bạn vào đây..."></textarea>
+    <label for="text-input">Nội dung tiếng Anh:</label>
+    <textarea id="text-input" placeholder="Nhập câu chuyện hoặc văn bản của bạn vào đây..."></textarea>
     
-    <label for="voice-select">Chọn giọng đọc:</label>
+    <label for="voice-select">Giọng đọc hệ thống:</label>
     <select id="voice-select">
         <option value="">Đang tải danh sách giọng...</option>
     </select>
@@ -164,7 +221,7 @@
     <div class="sliders-grid">
         <div class="slider-group">
             <div class="slider-header">
-                <label for="stability-slider" style="margin:0;">Sự ổn định (Stability)</label>
+                <label style="margin:0; font-size:12px;">Độ ổn định (Stability)</label>
                 <span id="stability-val">75%</span>
             </div>
             <input type="range" id="stability-slider" min="0" max="100" value="75">
@@ -172,7 +229,7 @@
 
         <div class="slider-group">
             <div class="slider-header">
-                <label for="clarity-slider" style="margin:0;">Sự khác nhau / Độ rõ (Clarity/Similarity)</label>
+                <label style="margin:0; font-size:12px;">Độ rõ tiếng (Clarity)</label>
                 <span id="clarity-val">80%</span>
             </div>
             <input type="range" id="clarity-slider" min="0" max="100" value="80">
@@ -180,7 +237,7 @@
 
         <div class="slider-group">
             <div class="slider-header">
-                <label for="rate-slider" style="margin:0;">Tốc độ nói (Speed Rate)</label>
+                <label style="margin:0; font-size:12px;">Tốc độ đọc (Speed)</label>
                 <span id="rate-val">0.9x</span>
             </div>
             <input type="range" id="rate-slider" min="0.5" max="1.5" step="0.05" value="0.9">
@@ -189,14 +246,18 @@
 
     <div class="btn-group">
         <div class="main-btns">
-            <button id="speak-btn">🎙️ Đọc & Ghi Âm</button>
+            <button id="speak-btn">🎙️ Bắt đầu Đọc & Ghi</button>
             <button id="stop-btn">⏹️ Dừng Lại</button>
         </div>
-        <button id="download-mp3-btn">📥 Tải File MP3 Chuẩn (Dùng cho CapCut)</button>
+        <button id="download-mp3-btn">📥 Tải Xuống File MP3 (CapCut)</button>
     </div>
     
-    <audio id="audio-preview" controls></audio>
-    <div class="note" id="status-note">Sẵn sàng đọc và tạo file MP3.</div>
+    <div class="preview-section">
+        <label style="margin-bottom: 6px; font-size: 11px;">Nghe lại trước khi tải:</label>
+        <audio id="audio-preview" controls></audio>
+    </div>
+
+    <div class="note" id="status-note">Hệ thống sẵn sàng tạo âm thanh.</div>
 </div>
 
 <script>
@@ -254,7 +315,7 @@
         if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
         speakBtn.disabled = false;
         stopBtn.style.display = 'none';
-        statusNote.textContent = "Đã dừng lại.";
+        statusNote.textContent = "Đã dừng thao tác.";
     }
 
     stopBtn.addEventListener('click', resetState);
@@ -262,16 +323,16 @@
     speakBtn.addEventListener('click', async () => {
         const text = textInput.value.trim();
         if (!text) {
-            alert('Vui lòng nhập nội dung!');
+            alert('Vui lòng nhập nội dung văn bản!');
             return;
         }
 
         if (!('speechSynthesis' in window)) {
-            alert('Trình duyệt không hỗ trợ đọc văn bản!');
+            alert('Trình duyệt của bạn không hỗ trợ đọc văn bản!');
             return;
         }
 
-        statusNote.textContent = "Đang bắt đầu đọc và ghi âm...";
+        statusNote.textContent = "Đang khởi tạo tiến trình đọc...";
         speakBtn.disabled = true;
         stopBtn.style.display = 'flex';
         recordedChunks = [];
@@ -291,15 +352,15 @@
             mediaRecorder.onstop = async () => {
                 const webmBlob = new Blob(recordedChunks, { type: 'audio/webm' });
                 
-                statusNote.textContent = "Đang chuyển đổi sang file MP3 chuẩn...";
+                statusNote.textContent = "Đang tối ưu và chuyển đổi sang MP3...";
                 try {
                     audioBlobForMp3 = await convertWebmToMp3(webmBlob);
                     audioPreview.src = URL.createObjectURL(audioBlobForMp3);
-                    statusNote.textContent = "Hoàn tất! Bấm 'Tải File MP3 Chuẩn' để lưu về máy.";
+                    statusNote.textContent = "✨ Hoàn tất! Bạn có thể nghe thử hoặc bấm tải xuống.";
                 } catch (e) {
                     audioBlobForMp3 = webmBlob;
                     audioPreview.src = URL.createObjectURL(webmBlob);
-                    statusNote.textContent = "Hoàn tất tạo file!";
+                    statusNote.textContent = "Hoàn tất tạo âm thanh!";
                 }
 
                 speakBtn.disabled = false;
@@ -325,7 +386,7 @@
             utterance.pitch = clarity > 80 ? basePitch + (clarity - 80) / 400 : basePitch;
 
             utterance.onstart = () => {
-                statusNote.textContent = "Đang đọc...";
+                statusNote.textContent = "🔊 Đang đọc văn bản...";
             };
 
             utterance.onend = () => {
@@ -338,7 +399,7 @@
 
             utterance.onerror = () => {
                 resetState();
-                statusNote.textContent = "Lỗi khi đọc văn bản.";
+                statusNote.textContent = "Có lỗi xảy ra khi đọc.";
             };
 
             window.speechSynthesis.speak(utterance);
@@ -346,8 +407,8 @@
         } catch (err) {
             speakBtn.disabled = false;
             stopBtn.style.display = 'none';
-            statusNote.textContent = "Cần cấp quyền micro để ghi âm.";
-            alert("Vui lòng cho phép trình duyệt sử dụng micro để ghi lại file.");
+            statusNote.textContent = "Cần quyền micro để xử lý.";
+            alert("Vui lòng cấp quyền micro cho trang web.");
         }
     });
 
@@ -387,12 +448,12 @@
 
     downloadMp3Btn.addEventListener('click', () => {
         if (!audioBlobForMp3) {
-            alert('Bạn cần bấm "Đọc & Ghi Âm" hoàn tất để tạo file trước khi tải!');
+            alert('Bạn cần bấm "Bắt đầu Đọc & Ghi" trước khi tải xuống!');
             return;
         }
         const a = document.createElement('a');
         a.href = URL.createObjectURL(audioBlobForMp3);
-        a.download = `voice-mark-${Date.now()}.mp3`;
+        a.download = `voice-mark-pro-${Date.now()}.mp3`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
